@@ -65,4 +65,15 @@ dependencies {
     // material dialogs
     def matieral_dialogs_version = "3.3.0"
     implementation "com.afollestad.material-dialogs:core:$matieral_dialogs_version"
+
+    //Room
+    def room_version = "2.2.6"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // -- Retrofit2
+    def retrofit2_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 }
