@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.parth.helloweatherapplication.R
+import com.parth.helloweatherapplication.databinding.FragmentLauncherBinding
 
-class LauncherFragment : Fragment() {
+class LauncherFragment : BaseAuthFragment() {
+
+    private var _binding: FragmentLauncherBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
