@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.parth.helloweatherapplication.model.AccountProperties
 import com.parth.helloweatherapplication.model.AuthToken
 
-@Database(entities = [AuthToken::class, AccountProperties::class], version = 1)
+@Database(entities = [AuthToken::class, AccountProperties::class], version = 2)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun getAuthTokenDao(): AuthTokenDao

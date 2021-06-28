@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.parth.helloweatherapplication.R
 
-class LauncherFragment : Fragment() {
+class LauncherFragment : BaseAuthFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -16,5 +16,6 @@ class LauncherFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_launcher, container, false)
     }
-    
+
+
 }
