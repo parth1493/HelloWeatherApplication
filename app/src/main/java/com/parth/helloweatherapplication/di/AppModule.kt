@@ -5,18 +5,39 @@ import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.parth.helloweatherapplication.R
 
 import com.parth.helloweatherapplication.persistence.AccountPropertiesDao
 import com.parth.helloweatherapplication.persistence.AppDatabase
 import com.parth.helloweatherapplication.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.parth.helloweatherapplication.persistence.AuthTokenDao
+import com.parth.helloweatherapplication.util.Constants
+import com.parth.helloweatherapplication.util.LiveDataCallAdapterFactory
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 class AppModule {
+
+    @Singleton
+    @Provides
+    fun provideGsonBuilder(): Gson {
+        return GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofitBuilder(gsonBuilder: Gson): Retrofit.Builder{
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .addConverterFactory(GsonConverterFactory.create(gsonBuilder))
+    }
 
     @Singleton
     @Provides
