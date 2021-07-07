@@ -7,6 +7,7 @@ import com.parth.helloweatherapplication.uii.displaySuccessDialog
 import com.parth.helloweatherapplication.uii.displayToast
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +33,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(),
 
     override fun onDataStateChange(dataState: DataState<*>?) {
         dataState?.let{
-            GlobalScope.launch(Dispatchers.Main){
+            GlobalScope.launch(Main){
                 displayProgressBar(it.loading.isLoading)
 
                 it.error?.let { errorEvent ->
