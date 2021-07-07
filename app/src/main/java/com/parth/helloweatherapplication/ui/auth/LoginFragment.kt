@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.parth.helloweatherapplication.R
 import com.parth.helloweatherapplication.databinding.FragmentLoginBinding
+import com.parth.helloweatherapplication.model.AuthToken
 import com.parth.helloweatherapplication.ui.auth.state.LoginFields
 import com.parth.helloweatherapplication.util.ApiEmptyResponse
 import com.parth.helloweatherapplication.util.ApiErrorResponse
 import com.parth.helloweatherapplication.util.ApiSuccessResponse
+import com.parth.helloweatherapplication.util.Constants
 
 
 class LoginFragment : BaseAuthFragment() {
@@ -29,7 +31,29 @@ class LoginFragment : BaseAuthFragment() {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "LoginFragment: ${viewModel}")
+
         subscribeObservers()
+
+        binding.loginButton.setOnClickListener {
+
+            // Check network connection
+            if (Constants.isNetworkConnected){
+                Log.i("Auth Activity", "Internet available")
+            }else{
+                Log.i("Auth Activity", "Internet not available")
+            }
+            viewModel.setAuthToken(
+                AuthToken(
+                    1,
+                    "gdfngidfng4nt43n43jn34jn"
+                )
+            )
+        }
     }
 
     fun subscribeObservers(){

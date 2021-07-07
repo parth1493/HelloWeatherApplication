@@ -5,6 +5,7 @@ import com.parth.helloweatherapplication.di.auth.AuthModule
 import com.parth.helloweatherapplication.di.auth.AuthScope
 import com.parth.helloweatherapplication.di.auth.AuthViewModelModule
 import com.parth.helloweatherapplication.ui.auth.AuthActivity
+import com.parth.helloweatherapplication.ui.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -16,4 +17,7 @@ abstract class ActivityBuildersModule {
         modules = [AuthModule::class, AuthFragmentBuildersModule::class, AuthViewModelModule::class]
     )
     abstract fun contributeAuthActivity(): AuthActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeMainActivity(): MainActivity
 }
