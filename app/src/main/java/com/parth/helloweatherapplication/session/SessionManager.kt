@@ -15,8 +15,9 @@ import com.parth.helloweatherapplication.persistence.AuthTokenDao
 import com.parth.helloweatherapplication.util.Constants
 import kotlinx.coroutines.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class SessionManager
 @Inject
 constructor(
