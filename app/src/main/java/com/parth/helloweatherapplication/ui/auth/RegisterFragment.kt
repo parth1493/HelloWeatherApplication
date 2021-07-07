@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.parth.helloweatherapplication.R
 import com.parth.helloweatherapplication.databinding.FragmentLoginBinding
 import com.parth.helloweatherapplication.databinding.FragmentRegisterBinding
+import com.parth.helloweatherapplication.ui.auth.state.AuthStateEvent
 import com.parth.helloweatherapplication.ui.auth.state.RegistrationFields
 import com.parth.helloweatherapplication.util.ApiEmptyResponse
 import com.parth.helloweatherapplication.util.ApiErrorResponse
@@ -34,7 +35,9 @@ class RegisterFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "RegisterFragment: ${viewModel}")
-
+        binding.registerButton.setOnClickListener {
+            register()
+        }
         subscribeObservers()
     }
 
@@ -47,6 +50,17 @@ class RegisterFragment : BaseAuthFragment() {
                 it.registration_confirm_password?.let{binding.inputPasswordConfirm.setText(it)}
             }
         })
+    }
+
+    fun register(){
+        viewModel.setStateEvent(
+            AuthStateEvent.RegisterAttemptEvent(
+                binding.inputEmail.text.toString(),
+                binding.inputUsername.text.toString(),
+                binding.inputPassword.text.toString(),
+                binding.inputPasswordConfirm.text.toString()
+            )
+        )
     }
 
     override fun onDestroyView() {

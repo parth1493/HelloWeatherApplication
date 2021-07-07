@@ -85,7 +85,7 @@ constructor(
     fun setValue(newValue: AuthToken?) {
         GlobalScope.launch(Dispatchers.Main) {
             if (_cachedToken.value != newValue) {
-                _cachedToken.value = newValue!!
+                _cachedToken.value = newValue
             }
         }
     }

@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.parth.helloweatherapplication.R
 import com.parth.helloweatherapplication.databinding.FragmentLoginBinding
 import com.parth.helloweatherapplication.model.AuthToken
+import com.parth.helloweatherapplication.ui.auth.state.AuthStateEvent
 import com.parth.helloweatherapplication.ui.auth.state.LoginFields
 import com.parth.helloweatherapplication.util.ApiEmptyResponse
 import com.parth.helloweatherapplication.util.ApiErrorResponse
@@ -47,13 +48,17 @@ class LoginFragment : BaseAuthFragment() {
             }else{
                 Log.i("Auth Activity", "Internet not available")
             }
-            viewModel.setAuthToken(
-                AuthToken(
-                    1,
-                    "gdfngidfng4nt43n43jn34jn"
-                )
-            )
+            login()
         }
+    }
+
+    fun login(){
+        viewModel.setStateEvent(
+            AuthStateEvent.LoginAttemptEvent(
+                binding.inputEmail.text.toString(),
+                binding.inputPassword.text.toString()
+            )
+        )
     }
 
     fun subscribeObservers(){
