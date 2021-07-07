@@ -11,8 +11,6 @@ import com.parth.helloweatherapplication.util.Constants.Companion.NETWORK_TIMEOU
 import com.parth.helloweatherapplication.util.Constants.Companion.TESTING_NETWORK_DELAY
 import com.parth.helloweatherapplication.util.ErrorHandling.Companion.ERROR_CHECK_NETWORK_CONNECTION
 import com.parth.helloweatherapplication.util.ErrorHandling.Companion.ERROR_UNKNOWN
-import com.parth.helloweatherapplication.util.ErrorHandling.Companion.UNABLE_TODO_OPERATION_WO_INTERNET
-import com.parth.helloweatherapplication.util.ErrorHandling.Companion.UNABLE_TO_RESOLVE_HOST
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main

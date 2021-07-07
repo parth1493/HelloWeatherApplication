@@ -1,12 +1,10 @@
 package com.parth.helloweatherapplication.ui.main
 
-import android.app.Instrumentation
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
-import com.parth.helloweatherapplication.R
 import com.parth.helloweatherapplication.databinding.ActivityMainBinding
 import com.parth.helloweatherapplication.ui.BaseActivity
 import com.parth.helloweatherapplication.ui.auth.AuthActivity
@@ -42,5 +40,14 @@ class MainActivity : BaseActivity() {
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    override fun displayProgressBar(bool: Boolean){
+        if(bool){
+            binding.progressBar.visibility = View.VISIBLE
+        }
+        else{
+            binding.progressBar.visibility = View.GONE
+        }
     }
 }

@@ -3,12 +3,15 @@ package com.parth.helloweatherapplication.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.parth.helloweatherapplication.R
+import com.parth.helloweatherapplication.databinding.ActivityAuthBinding
+import com.parth.helloweatherapplication.databinding.ActivityMainBinding
 import com.parth.helloweatherapplication.ui.BaseActivity
 import com.parth.helloweatherapplication.ui.ResponseType
 import com.parth.helloweatherapplication.ui.main.MainActivity
@@ -19,6 +22,15 @@ import javax.inject.Inject
 class AuthActivity : BaseActivity(),
     NavController.OnDestinationChangedListener
 {
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        viewModel.cancelActiveJobs()
+    }
+
+    private lateinit var binding: ActivityAuthBinding
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
@@ -26,7 +38,9 @@ class AuthActivity : BaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_auth)
+        binding = ActivityAuthBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         viewModel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
         findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
@@ -37,30 +51,13 @@ class AuthActivity : BaseActivity(),
     private fun subscribeObservers(){
 
         viewModel.dataState.observe(this, Observer { dataState ->
+            onDataStateChange(dataState)
             dataState.data?.let { data ->
                 data.data?.let { event ->
                     event.getContentIfNotHandled()?.let {
                         it.authToken?.let {
                             Log.d("AuthActivity", "AuthActivity, DataState: ${it}")
                             viewModel.setAuthToken(it)
-                        }
-                    }
-                }
-                data.response?.let {event ->
-                    event.getContentIfNotHandled()?.let{
-                        when(it.responseType){
-                            is ResponseType.Dialog ->{
-                                // show dialog
-                            }
-
-                            is ResponseType.Toast ->{
-                                // show toast
-                            }
-
-                            is ResponseType.None ->{
-                                // print to log
-                                Log.e("AuthActivity", "AuthActivity: Response: ${it.message}, ${it.responseType}" )
-                            }
                         }
                     }
                 }
@@ -91,11 +88,12 @@ class AuthActivity : BaseActivity(),
         finish()
     }
 
-    override fun onDestinationChanged(
-        controller: NavController,
-        destination: NavDestination,
-        arguments: Bundle?
-    ) {
-        viewModel.cancelActiveJobs()
+    override fun displayProgressBar(bool: Boolean){
+        if(bool){
+            binding.progressBar.visibility = View.VISIBLE
+        }
+        else{
+            binding.progressBar.visibility = View.GONE
+        }
     }
 }
