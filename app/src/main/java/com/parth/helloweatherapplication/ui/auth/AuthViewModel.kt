@@ -42,7 +42,7 @@ constructor(
             }
 
             is AuthStateEvent.CheckPreviousAuthEvent -> {
-                return AbsentLiveData.create()
+                return authRepository.checkPreviousAuthUser()
             }
 
 

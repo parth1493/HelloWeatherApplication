@@ -14,8 +14,10 @@ import com.parth.helloweatherapplication.databinding.ActivityAuthBinding
 import com.parth.helloweatherapplication.databinding.ActivityMainBinding
 import com.parth.helloweatherapplication.ui.BaseActivity
 import com.parth.helloweatherapplication.ui.ResponseType
+import com.parth.helloweatherapplication.ui.auth.state.AuthStateEvent
 import com.parth.helloweatherapplication.ui.main.MainActivity
 import com.parth.helloweatherapplication.util.Constants
+import com.parth.helloweatherapplication.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import com.parth.helloweatherapplication.viewmodels.ViewModelProviderFactory
 import javax.inject.Inject
 
@@ -46,6 +48,7 @@ class AuthActivity : BaseActivity(),
         findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
 
         subscribeObservers()
+        checkPreviousAuthUser()
     }
 
     private fun subscribeObservers(){
@@ -58,6 +61,15 @@ class AuthActivity : BaseActivity(),
                         it.authToken?.let {
                             Log.d("AuthActivity", "AuthActivity, DataState: ${it}")
                             viewModel.setAuthToken(it)
+                        }
+                    }
+                }
+                data.response?.let{event ->
+                    event.peekContent().let{ response ->
+                        response.message?.let{ message ->
+                            if(message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
+                                onFinishCheckPreviousAuthUser()
+                            }
                         }
                     }
                 }
@@ -79,6 +91,13 @@ class AuthActivity : BaseActivity(),
                 }
             }
         })
+    }
+    private fun checkPreviousAuthUser(){
+        viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
+    }
+
+    private fun onFinishCheckPreviousAuthUser(){
+        binding.fragmentContainer.visibility = View.VISIBLE
     }
 
     fun navMainActivity(){

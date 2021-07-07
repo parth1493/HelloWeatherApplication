@@ -1,5 +1,6 @@
 package com.parth.helloweatherapplication.di.auth
 
+import android.content.SharedPreferences
 import com.parth.helloweatherapplication.api.auth.OpenApiAuthService
 import com.parth.helloweatherapplication.persistence.AccountPropertiesDao
 import com.parth.helloweatherapplication.persistence.AuthTokenDao
@@ -26,13 +27,17 @@ class AuthModule{
         sessionManager: SessionManager,
         authTokenDao: AuthTokenDao,
         accountPropertiesDao: AccountPropertiesDao,
-        openApiAuthService: OpenApiAuthService
+        openApiAuthService: OpenApiAuthService,
+        preferences: SharedPreferences,
+        editor: SharedPreferences.Editor
     ): AuthRepository {
         return AuthRepository(
             authTokenDao,
             accountPropertiesDao,
             openApiAuthService,
-            sessionManager
+            sessionManager,
+            preferences,
+            editor
         )
     }
 

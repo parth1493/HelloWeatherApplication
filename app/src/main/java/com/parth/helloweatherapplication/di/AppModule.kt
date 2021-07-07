@@ -1,6 +1,8 @@
 package com.parth.helloweatherapplication.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -15,6 +17,7 @@ import com.parth.helloweatherapplication.persistence.AppDatabase.Companion.DATAB
 import com.parth.helloweatherapplication.persistence.AuthTokenDao
 import com.parth.helloweatherapplication.util.Constants
 import com.parth.helloweatherapplication.util.LiveDataCallAdapterFactory
+import com.parth.helloweatherapplication.util.PreferenceKeys
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -23,6 +26,18 @@ import javax.inject.Singleton
 
 @Module
 class AppModule {
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(application: Application): SharedPreferences {
+        return application.getSharedPreferences(PreferenceKeys.APP_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPrefsEditor(sharedPreferences: SharedPreferences): SharedPreferences.Editor {
+        return sharedPreferences.edit()
+    }
 
     @Singleton
     @Provides
