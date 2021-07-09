@@ -14,10 +14,13 @@ import com.parth.helloweatherapplication.R
 import com.parth.helloweatherapplication.databinding.ActivityMainBinding
 import com.parth.helloweatherapplication.ui.BaseActivity
 import com.parth.helloweatherapplication.ui.auth.AuthActivity
+import com.parth.helloweatherapplication.ui.main.account.BaseAccountFragment
 import com.parth.helloweatherapplication.ui.main.account.ChangePasswordFragment
 import com.parth.helloweatherapplication.ui.main.account.UpdateAccountFragment
+import com.parth.helloweatherapplication.ui.main.blog.BaseBlogFragment
 import com.parth.helloweatherapplication.ui.main.blog.UpdateBlogFragment
 import com.parth.helloweatherapplication.ui.main.blog.ViewBlogFragment
+import com.parth.helloweatherapplication.ui.main.create_blog.BaseCreateBlogFragment
 import com.parth.helloweatherapplication.util.BottomNavController
 import com.parth.helloweatherapplication.util.setUpNavigation
 
@@ -56,7 +59,27 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onGraphChange() {
-//        TODO("What needs to happen when the graph changes?")
+        cancelActiveJobs()
+        expandAppBar()
+    }
+
+    private fun cancelActiveJobs(){
+        val fragments = bottomNavController.fragmentManager
+            .findFragmentById(bottomNavController.containerId)
+            ?.childFragmentManager
+            ?.fragments
+        if(fragments != null){
+            for(fragment in fragments){
+                (fragment as? BaseAccountFragment)?.cancelActiveJobs()
+                if(fragment is BaseBlogFragment){
+                    fragment.cancelActiveJobs()
+                }
+                if(fragment is BaseCreateBlogFragment){
+                    fragment.cancelActiveJobs()
+                }
+            }
+        }
+        displayProgressBar(false)
     }
 
     override fun onReselectNavItem(

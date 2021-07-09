@@ -1,6 +1,8 @@
 package com.parth.helloweatherapplication.ui
 
+import android.content.Context
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import com.parth.helloweatherapplication.session.SessionManager
 import com.parth.helloweatherapplication.uii.displayErrorDialog
 import com.parth.helloweatherapplication.uii.displaySuccessDialog
@@ -94,6 +96,14 @@ abstract class BaseActivity : DaggerAppCompatActivity(),
                     Log.i(TAG, "handleStateError: ${it.response.message}")
                 }
             }
+        }
+    }
+    override fun hideSoftKeyboard() {
+        if (currentFocus != null) {
+            val inputMethodManager = getSystemService(
+                Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager
+                .hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
     }
 }

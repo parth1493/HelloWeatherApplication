@@ -1,12 +1,16 @@
 package com.parth.helloweatherapplication.ui.main.account
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.parth.helloweatherapplication.R
 import com.parth.helloweatherapplication.databinding.FragmentAccountBinding
 import com.parth.helloweatherapplication.databinding.FragmentLoginBinding
+import com.parth.helloweatherapplication.model.AccountProperties
 import com.parth.helloweatherapplication.session.SessionManager
+import com.parth.helloweatherapplication.ui.main.account.state.AccountStateEvent
 import javax.inject.Inject
 
 class AccountFragment : BaseAccountFragment(){
@@ -39,6 +43,45 @@ class AccountFragment : BaseAccountFragment(){
         binding.logoutButton.setOnClickListener {
             sessionManager.logout()
         }
+
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers(){
+        viewModel.dataState.observe(viewLifecycleOwner, Observer{ dataState ->
+            stateChangeListener.onDataStateChange(dataState)
+            if(dataState != null){
+                dataState.data?.let { data ->
+                    data.data?.let{ event ->
+                        event.getContentIfNotHandled()?.let{ viewState ->
+                            viewState.accountProperties?.let{ accountProperties ->
+                                Log.d(TAG, "AccountFragment, DataState: ${accountProperties}")
+                                viewModel.setAccountPropertiesData(accountProperties)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        viewModel.viewState.observe(viewLifecycleOwner, Observer{ viewState->
+            if(viewState != null){
+                viewState.accountProperties?.let{
+                    Log.d(TAG, "AccountFragment, ViewState: ${it}")
+                    setAccountDataFields(it)
+                }
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setStateEvent(AccountStateEvent.GetAccountPropertiesEvent())
+    }
+
+    private fun setAccountDataFields(accountProperties: AccountProperties) {
+        binding.email?.setText(accountProperties.email)
+        binding.username?.setText(accountProperties.username)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

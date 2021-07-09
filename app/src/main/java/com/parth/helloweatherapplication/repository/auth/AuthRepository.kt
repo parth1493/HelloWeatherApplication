@@ -11,6 +11,7 @@ import com.parth.helloweatherapplication.model.AccountProperties
 import com.parth.helloweatherapplication.model.AuthToken
 import com.parth.helloweatherapplication.persistence.AccountPropertiesDao
 import com.parth.helloweatherapplication.persistence.AuthTokenDao
+import com.parth.helloweatherapplication.repository.JobManager
 import com.parth.helloweatherapplication.repository.NetworkBoundResource
 import com.parth.helloweatherapplication.session.SessionManager
 import com.parth.helloweatherapplication.ui.DataState
@@ -37,7 +38,7 @@ constructor(
     val sessionManager: SessionManager,
     val sharedPreferences: SharedPreferences,
     val sharedPrefsEditor: SharedPreferences.Editor
-)
+): JobManager("AuthRepository")
 {
 
     private val TAG: String = "AppDebug"
@@ -52,10 +53,22 @@ constructor(
             return returnErrorResponse(loginFieldErrors, ResponseType.Dialog())
         }
 
-        return object: NetworkBoundResource<LoginResponse, AuthViewState>(
+        return object: NetworkBoundResource<LoginResponse, Any, AuthViewState>(
             Constants.isNetworkConnected,
-            true
+            true,
+            true,
+            false
         ){
+
+            // Ignore
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
 
             // not used in this case
             override suspend fun createCacheRequestAndReturn() {
@@ -109,8 +122,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptLogin", job)
             }
 
         }.asLiveData()
@@ -128,10 +140,22 @@ constructor(
             return returnErrorResponse(registrationFieldErrors, ResponseType.Dialog())
         }
 
-        return object: NetworkBoundResource<RegistrationResponse, AuthViewState>(
+        return object: NetworkBoundResource<RegistrationResponse, Any, AuthViewState>(
             Constants.isNetworkConnected,
-            true
+            true,
+            true,
+            false
         ){
+            // Ignore
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
             // not used in this case
             override suspend fun createCacheRequestAndReturn() {
 
@@ -191,8 +215,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptRegistration", job)
             }
 
         }.asLiveData()
@@ -208,10 +231,22 @@ constructor(
             return returnNoTokenFound()
         }
         else{
-            return object: NetworkBoundResource<Void, AuthViewState>(
+            return object: NetworkBoundResource<Void, Any, AuthViewState>(
                 Constants.isNetworkConnected,
+                false,
+                false,
                 false
             ){
+
+                // Ignore
+                override fun loadFromCache(): LiveData<AuthViewState> {
+                    return AbsentLiveData.create()
+                }
+
+                // Ignore
+                override suspend fun updateLocalDb(cacheObject: Any?) {
+
+                }
 
                 override suspend fun createCacheRequestAndReturn() {
                     accountPropertiesDao.searchByEmail(previousAuthUserEmail).let { accountProperties ->
@@ -256,8 +291,7 @@ constructor(
                 }
 
                 override fun setJob(job: Job) {
-                    repositoryJob?.cancel()
-                    repositoryJob = job
+                    addJob("checkPreviousAuthUser", job)
                 }
 
 
@@ -293,10 +327,5 @@ constructor(
                 )
             }
         }
-    }
-
-    fun cancelActiveJobs(){
-        Log.d(TAG, "AuthRepository: Cancelling on-going jobs...")
-        repositoryJob?.cancel()
     }
 }
