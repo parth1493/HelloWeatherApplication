@@ -51,6 +51,10 @@ class AuthActivity : BaseActivity(),
         checkPreviousAuthUser()
     }
 
+    override fun expandAppBar() {
+        TODO("Not yet implemented")
+    }
+
     private fun subscribeObservers(){
 
         viewModel.dataState.observe(this, Observer { dataState ->
